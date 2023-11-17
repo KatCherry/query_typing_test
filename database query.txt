@@ -12,7 +12,7 @@ WITH RECURSIVE employee_departments AS
    JOIN employee_departments ON employee_departments.department_id = departments.parent_id)
 SELECT employee_id,
        employee_name,
-   ARRAY_AGE(department_id) AS department_ids
+ARRAY_AGE(department_id) AS department_ids
 FROM employee_departments
 GROUP BY employee_id,
          employee_name;
