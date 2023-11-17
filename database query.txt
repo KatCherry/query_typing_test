@@ -1,15 +1,10 @@
 Задание 1.
-SELECT
-employees.id AS employee_id,
-employees.name AS employee_name,
-ARRAY_AGG(departments.id) AS parent_department_ids
-FROM
-employees
-INNER JOIN
-departments
-ON
-employees.department_id = departments.parent_id
-GROUP BY
-employees.id, employees.name;
-
-
+WITH RECURSIVE employee_departments AS (
+SELECT employees.id as employee_id, employees.name as employee_name, departments.id as department_id
+FROM employees
+JOIN departments  ON employees.department_id = departments.id
+UNION ALL
+SELECT employee_departments.employee_id, employee_departments.employee_name, departments.id
+FROM departments
+JOIN employee_departments ON employee_departments.department_id = departments.parent_id
+)
