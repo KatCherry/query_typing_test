@@ -1,3 +1,4 @@
+WITH RECURSIVE employee_departments AS (
 SELECT employees.id as employee_id, employees.name as employee_name, departments.id as department_id
 FROM employees
 JOIN departments ON employees.department_id = departments.id
@@ -6,6 +7,6 @@ SELECT employee_departments.employee_id, employee_departments.employee_name, dep
 FROM departments
 JOIN employee_departments employee_departments ON employee_departments.department_id = departments.parent_id
 )
-SELECT employee_id, employee_name, GROUP_CONCAT(department_id) as department_ids
+SELECT employee_id, employee_name, ARRAY_AGE(department_id) as department_ids
 FROM employee_departments
 GROUP BY employee_id, employee_name; 
