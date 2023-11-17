@@ -1,31 +1,18 @@
-WITH RECURSIVE employee_departments AS 
-(
-   SELECT
-      employees.id as employee_id,
-      employees.name as employee_name,
-      departments.id as department_id 
-   FROM
-      employees 
-      JOIN
-         departments 
-         ON employees.department_id = departments.id 
-      UNION ALL
-      SELECT
-         employee_departments.employee_id,
-         employee_departments.employee_name,
-         departments.id 
-      FROM
-         departments 
-         JOIN
-            employee_departments employee_departments 
-            ON employee_departments.department_id = departments.parent_id 
-)
-SELECT
-   employee_id,
-   employee_name,
-   ARRAY_AGE(department_id) as department_ids 
-FROM
-   employee_departments 
-GROUP BY
-   employee_id,
-   employee_name;
+WITH RECURSIVE employee_departments AS
+  (SELECT employees.id AS employee_id,
+          employees.name AS employee_name,
+          departments.id AS department_id
+   FROM employees
+   JOIN departments ON employees.department_id = departments.id
+   UNION ALL 
+   SELECT employee_departments.employee_id,
+          employee_departments.employee_name,
+          departments.id
+   FROM departments
+   JOIN employee_departments ON employee_departments.department_id = departments.parent_id)
+SELECT employee_id,
+       employee_name,
+       ARRAY_AGE(department_id) AS department_ids
+FROM employee_departments
+GROUP BY employee_id,
+         employee_name;
